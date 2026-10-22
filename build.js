@@ -1,4 +1,4 @@
-// Injects Supabase settings from environment variables into src/index.html → dist/index.html.
+// Injects Supabase settings from environment variables into src/index.html → public/index.html.
 // Locally, values are also read from a .env file. On Vercel, set them in Project Settings → Environment Variables.
 const fs = require("fs");
 const path = require("path");
@@ -32,6 +32,6 @@ if (/service_role/i.test(key) || (key.split(".")[1] && Buffer.from(key.split("."
 let html = fs.readFileSync(path.join(__dirname, "src", "index.html"), "utf8");
 html = html.replace("__SUPABASE_URL__", () => url).replace("__SUPABASE_ANON_KEY__", () => key);
 
-fs.mkdirSync(path.join(__dirname, "dist"), { recursive: true });
-fs.writeFileSync(path.join(__dirname, "dist", "index.html"), html);
-console.log(`Built dist/index.html (${url ? "Supabase configured" : "demo mode"})`);
+fs.mkdirSync(path.join(__dirname, "public"), { recursive: true });
+fs.writeFileSync(path.join(__dirname, "public", "index.html"), html);
+console.log(`Built public/index.html (${url ? "Supabase configured" : "demo mode"})`);
