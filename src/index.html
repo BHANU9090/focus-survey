@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Focus & Mental Energy Survey · India</title>
+<meta name="description" content="A 3–5 minute survey on focus, concentration and everyday distractions in India.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F0E8; --card:#FFFFFF; --ink:#1B2B2D; --muted:#5E6F70; --line:#E4DDD0;
+    --brand:#0E4F4C; --brand-soft:#DCEBE8; --accent:#F0A63A; --danger:#B8402B;
+    --radius:18px; --shadow:0 1px 2px rgba(27,43,45,.05),0 12px 32px -12px rgba(27,43,45,.18);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(900px 420px at 85% -10%,rgba(240,166,58,.22),transparent 60%),radial-gradient(700px 400px at -10% 10%,rgba(14,79,76,.12),transparent 60%);
+    background-repeat:no-repeat}
+  h1,h2{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;margin:0}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 18px 80px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--brand);margin-bottom:28px}
+  .dot{width:26px;height:26px;border-radius:50%;background:conic-gradient(from 200deg,var(--brand),var(--accent),var(--brand));display:grid;place-items:center}
+  .dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--bg)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
+  /* hero */
+  .hero h1{font-size:clamp(30px,6vw,46px);line-height:1.1;margin-bottom:14px}
+  .hero p{color:var(--muted);margin:0 0 14px}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 26px}
+  .pill{background:var(--brand-soft);color:var(--brand);font-size:13px;font-weight:500;padding:6px 12px;border-radius:99px}
+  .consent{display:flex;gap:12px;align-items:flex-start;padding:14px;border:1px dashed var(--line);border-radius:12px;margin-bottom:20px;cursor:pointer;font-size:14px;color:var(--muted)}
+  .consent input{margin-top:3px;accent-color:var(--brand);width:18px;height:18px}
+  /* buttons */
+  .btn{appearance:none;border:0;border-radius:12px;padding:14px 24px;font:600 16px Inter,sans-serif;cursor:pointer;transition:.15s}
+  .btn.primary{background:var(--brand);color:#fff}
+  .btn.primary:hover{background:#0A3D3B;transform:translateY(-1px)}
+  .btn.ghost{background:transparent;color:var(--muted)}
+  .btn.ghost:hover{color:var(--ink)}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+  /* progress */
+  .progress{margin-bottom:22px}
+  .steps{display:flex;gap:6px;margin-bottom:10px}
+  .steps i{flex:1;height:6px;border-radius:6px;background:var(--line);transition:.3s}
+  .steps i.done{background:var(--brand)} .steps i.now{background:var(--accent)}
+  .meta{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+  /* questions */
+  .section-head{margin-bottom:22px}
+  .section-head h2{font-size:28px}
+  .section-head p{margin:6px 0 0;color:var(--muted);font-size:14px}
+  .q{padding:22px 0;border-top:1px solid var(--line)}
+  .q:first-of-type{border-top:0;padding-top:0}
+  .q.err{background:linear-gradient(90deg,rgba(184,64,43,.07),transparent);margin:0 -14px;padding-left:14px;padding-right:14px;border-radius:12px}
+  .q-title{font-weight:600;font-size:17px;line-height:1.4;margin-bottom:4px}
+  .q-num{color:var(--accent);font-family:Fraunces,serif;margin-right:6px}
+  .req{color:var(--danger)}
+  .hint{font-size:13px;color:var(--muted);margin-bottom:12px}
+  .errmsg{display:none;color:var(--danger);font-size:13px;margin-top:8px;font-weight:500}
+  .q.err .errmsg{display:block}
+  .opts{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{position:relative}
+  .chip input{position:absolute;opacity:0;inset:0;cursor:pointer;width:100%;height:100%;margin:0}
+  .chip span{display:block;padding:10px 16px;border:1.5px solid var(--line);border-radius:12px;background:#FBF9F5;font-size:15px;transition:.15s;user-select:none}
+  .chip:hover span{border-color:#C9BFAC}
+  .chip input:checked + span{background:var(--brand);border-color:var(--brand);color:#fff}
+  .chip input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+  .chip input:disabled + span{opacity:.4}
+  .opts.stack{flex-direction:column}
+  .opts.stack .chip span{width:100%}
+  input[type=text],textarea{width:100%;font:inherit;color:inherit;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:#FBF9F5;transition:.15s}
+  input[type=text]:focus,textarea:focus{outline:0;border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px var(--brand-soft)}
+  textarea{min-height:110px;resize:vertical}
+  .other{margin-top:10px;display:none}.other.show{display:block}
+  /* scale */
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .scale .chip span{text-align:center;padding:16px 0;font-family:Fraunces,serif;font-size:22px}
+  .scale-ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px}
+  /* grid */
+  .grid-row{padding:14px;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:#FDFBF8}
+  .grid-row.err{border-color:var(--danger)}
+  .grid-label{font-weight:500;margin-bottom:10px;font-size:15px}
+  .seg{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .seg .chip span{padding:9px 2px;text-align:center;font-size:13px}
+  @media(max-width:520px){.card{padding:20px}.seg .chip span{font-size:11.5px;padding:9px 0}.btn{padding:13px 18px}}
+  /* nav */
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:12px}
+  /* thanks */
+  .thanks{text-align:center;padding:36px 12px}
+  .tick{width:72px;height:72px;border-radius:50%;background:var(--brand);margin:0 auto 20px;display:grid;place-items:center;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+  .tick svg{width:34px;height:34px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  @keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+  .thanks h2{font-size:34px;margin-bottom:10px}.thanks p{color:var(--muted);max-width:440px;margin:0 auto}
+  .banner{background:#FFF4DE;border:1px solid #F0D79F;color:#7A5410;border-radius:12px;padding:12px 14px;font-size:13px;margin-bottom:18px}
+  .fade{animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
+  [hidden]{display:none!important}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><div class="dot"></div> Focus Survey India</div>
+  <main id="app"></main>
+  <div class="foot">Responses are anonymous and analysed in aggregate.</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ─────────────  CONFIG: injected at build time from env vars (see build.js)  ───────────── */
+const SUPABASE_URL      = "__SUPABASE_URL__";
+const SUPABASE_ANON_KEY = "__SUPABASE_ANON_KEY__";
+const TABLE             = "survey_responses";
+/* ───────────────────────────────────────────────────────────────────────── */
+
+const DEMO = !SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_URL.startsWith("__");
+const sb = DEMO ? null : supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const FREQ = ["Never","Rarely","Sometimes","Often","Very often"];
+
+/* type: single | multi | grid | scale | text | long.  key = DB column. */
+const SECTIONS = [
+ { title:"About you", sub:"Just a few basics so we can read results in context.", qs:[
+  {n:1,key:"q1_age_group",type:"single",req:1,text:"What is your age group?",
+   opts:["Under 18","18–21","22–25","26–30","31–35","36–45","Above 45"]},
+  {n:2,key:"q2_gender",type:"single",req:1,text:"Which gender do you identify with?",
+   opts:["Male","Female","Non-binary","Prefer to self-describe","Prefer not to say"]},
+  {n:3,key:"q3_situation",type:"single",req:1,text:"Which best describes your current situation?",
+   opts:["School/college student","Working professional","Preparing for competitive exams","Entrepreneur/freelancer","Currently not working","Other"],other:"Other"},
+  {n:4,key:"q4_city",type:"text",text:"Which city or town do you currently live in?",ph:"e.g. Pune"}
+ ]},
+ { title:"Your focus & concentration", sub:"How focus shows up in your everyday life.", qs:[
+  {n:5,key:"q5_concentration_difficulty",type:"single",req:1,text:"How often do you find it difficult to concentrate on a task?",
+   opts:["Never","Rarely","Sometimes","Often","Almost always"]},
+  {n:6,key:"q6_focus_duration",type:"single",req:1,stack:1,text:"When doing something important, how long can you typically focus before feeling the urge to switch tasks or check your phone?",
+   opts:["Less than 5 minutes","5–10 minutes","11–20 minutes","21–30 minutes","31–60 minutes","More than 60 minutes","It varies significantly depending on the task"]},
+  {n:7,key:"q7_focus_frequency",type:"grid",req:1,text:"How often do you experience the following?",cols:FREQ,rows:[
+    ["phone_distraction","Getting distracted by my phone or notifications"],
+    ["losing_track","Losing track of what I was doing"],
+    ["mental_fatigue","Feeling mentally tired even when I'm not physically tired"],
+    ["hard_to_start","Struggling to get started on an important task"],
+    ["daytime_sleepy","Feeling sleepy or less alert during the day"],
+    ["hard_to_resume","Finding it difficult to return to a task after an interruption"]]},
+  {n:8,key:"q8_struggle_situations",type:"multi",text:"In which situations do you struggle with focus the most?",hint:"Select all that apply",
+   opts:["Studying or preparing for exams","Working on a laptop or at a desk","Reading books or long articles","Attending classes or meetings","During conversations","While doing repetitive tasks","During afternoon or evening hours","I generally don't struggle with focus","Other"],
+   other:"Other",exclusive:["I generally don't struggle with focus"]},
+  {n:9,key:"q9_affecting_factors",type:"multi",max:3,text:"What do you think affects your concentration the most?",hint:"Select up to 3",
+   opts:["Poor sleep","Excessive social media use","Frequent phone notifications","Stress or anxiety","Lack of motivation","Boredom","Heavy workload","Irregular eating habits","Lack of physical activity","Caffeine or energy-drink habits","I haven't identified a specific cause","Other"],
+   other:"Other",exclusive:["I haven't identified a specific cause"]}
+ ]},
+ { title:"Your daily habits", sub:"Phone, sleep and how you recharge.", qs:[
+  {n:10,key:"q10_phone_time",type:"single",req:1,text:"Approximately how much time do you spend on your phone each day?",
+   opts:["Less than 2 hours","2–4 hours","4–6 hours","6–8 hours","More than 8 hours","I'm not sure"]},
+  {n:11,key:"q11_sleep",type:"single",req:1,text:"How much sleep do you typically get each night?",
+   opts:["Less than 5 hours","5–6 hours","6–7 hours","7–8 hours","More than 8 hours"]},
+  {n:12,key:"q12_caffeine",type:"single",req:1,text:"How often do you consume caffeine to feel awake or alert?",
+   opts:["Never","Less than once a week","1–3 days a week","4–6 days a week","Daily","Multiple times a day"]},
+  {n:13,key:"q13_coping",type:"multi",text:"What do you currently do when you feel mentally tired or unable to focus?",hint:"Select all that apply",
+   opts:["Drink coffee or tea","Drink an energy drink","Take a short break","Scroll social media","Eat a snack","Exercise or walk","Take a nap","Chew gum","Use supplements","Push through without doing anything","Other"],
+   other:"Other",exclusive:["Push through without doing anything"]}
+ ]},
+ { title:"Focus-support products", sub:"These questions are about products people may use to support alertness or concentration. They are not intended to imply that any product is proven to improve focus.", qs:[
+  {n:14,key:"q14_purchased",type:"single",req:1,stack:1,text:"Have you ever purchased a product specifically to help with focus, alertness, or mental energy?",
+   opts:["Yes, regularly","Yes, occasionally","I've considered it but never purchased one","No, never"]},
+  {n:15,key:"q15_formats",type:"multi",text:"Which of these product formats would you be interested in trying?",hint:"Select all that apply",
+   opts:["Functional chewing gum","Tablets that dissolve in water","Ready-to-drink beverages","Powders mixed with water","Capsules or conventional supplements","None of these","Not sure yet"],
+   exclusive:["None of these","Not sure yet"]},
+  {n:16,key:"q16_priorities",type:"multi",max:3,text:"What would matter most to you when choosing a focus-support product?",hint:"Select up to 3",
+   opts:["Evidence that it works","Safety and ingredient transparency","Fast onset of effect","No unwanted side effects","Convenient to carry and use","Good taste","Affordable price","Low or no sugar","Caffeine-free formulation","Trusted brand","Recommendations from friends or creators"]},
+  {n:17,key:"q17_interest",type:"scale",req:1,text:"How interested would you be in trying a convenient product designed to support alertness or focus during studying or work?",
+   lo:"Not interested at all",hi:"Extremely interested"},
+  {n:18,key:"q18_price",type:"single",req:1,text:"What would you consider a reasonable price for a single-use product?",
+   opts:["Less than ₹10","₹10–₹19","₹20–₹29","₹30–₹49","₹50 or more","It depends on the ingredients and effectiveness","I wouldn't purchase one"]},
+  {n:19,key:"q19_hesitations",type:"multi",text:"What would make you hesitate to try a product like this?",hint:"Select all that apply",
+   opts:["Concerns about safety","Doubts about whether it works","Price","Unfamiliar ingredients","Unwanted side effects","Taste","Existing alternatives work well enough","I don't need a product like this","Other"],
+   other:"Other"}
+ ]},
+ { title:"Final thoughts", sub:"Optional, but this is where the most useful insight comes from.", qs:[
+  {n:20,key:"q20_change_one_thing",type:"long",text:"If you could change one thing about your ability to focus or manage mental fatigue, what would it be?",ph:"Write in your own words…"},
+  {n:21,key:"q21_trust_factors",type:"long",text:"What would convince you to trust a new Indian brand offering focus-support products?",ph:"Write in your own words…"}
+ ]}
+];
+
+/* ───── state ───── */
+const LS = "focus-survey-v1";
+let state = { step:-1, a:{}, other:{}, consent:false, done:false };
+try{ const s = JSON.parse(localStorage.getItem(LS)||"null"); if(s && !s.done) state = s; }catch(e){}
+const save = () => { try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){} };
+const $ = (s,r=document)=>r.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const app = $("#app");
+
+/* ───── render ───── */
+function render(){
+  save();
+  if(state.done) return renderThanks();
+  if(state.step < 0) return renderHero();
+  renderSection();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderHero(){
+  app.innerHTML = `
+  <section class="card hero fade">
+    <h1>How well can you focus, really?</h1>
+    <p>We're studying how people in India experience focus, concentration, mental fatigue and daily distractions. Your answers help us understand everyday challenges and preferences around focus-support products.</p>
+    <div class="pills"><span class="pill">⏱ 3–5 minutes</span><span class="pill">🔒 Anonymous</span><span class="pill">21 questions</span></div>
+    <p style="font-size:14px">Participation is voluntary. Please don't include any personal or sensitive information. Responses are analysed in aggregate for research purposes.</p>
+    <label class="consent"><input type="checkbox" id="consent" ${state.consent?"checked":""}>
+      <span>I understand participation is voluntary and agree that my responses may be used for aggregate research.</span></label>
+    <button class="btn primary" id="start" ${state.consent?"":"disabled"}>${Object.keys(state.a).length?"Continue survey →":"Start survey →"}</button>
+  </section>`;
+  $("#consent").onchange = e => { state.consent = e.target.checked; $("#start").disabled = !state.consent; save(); };
+  $("#start").onclick = () => { state.step = 0; render(); };
+}
+
+function renderSection(){
+  const sec = SECTIONS[state.step], last = state.step === SECTIONS.length-1;
+  app.innerHTML = `
+  <div class="progress fade">
+    <div class="steps">${SECTIONS.map((_,i)=>`<i class="${i<state.step?"done":i===state.step?"now":""}"></i>`).join("")}</div>
+    <div class="meta"><span>Section ${state.step+1} of ${SECTIONS.length}</span><span>${Math.round(state.step/SECTIONS.length*100)}% complete</span></div>
+  </div>
+  <section class="card fade">
+    ${DEMO?`<div class="banner"><b>Demo mode:</b> Supabase isn't configured yet, so answers won't be saved. Add your URL and anon key in <code>index.html</code>.</div>`:""}
+    <div class="section-head"><h2>${esc(sec.title)}</h2><p>${esc(sec.sub)}</p></div>
+    <div id="qs">${sec.qs.map(renderQ).join("")}</div>
+    <div class="nav">
+      <button class="btn ghost" id="back">← ${state.step===0?"Intro":"Back"}</button>
+      <button class="btn primary" id="next">${last?"Submit":"Next →"}</button>
+    </div>
+    <div class="errmsg" id="submitErr" style="text-align:right"></div>
+  </section>`;
+  wire(sec);
+  $("#back").onclick = () => { state.step--; render(); };
+  $("#next").onclick = () => next(sec, last);
+}
+
+function chip(type,name,val,checked,extra=""){
+  return `<label class="chip"><input type="${type}" name="${name}" value="${esc(val)}" ${checked?"checked":""} ${extra}><span>${esc(val)}</span></label>`;
+}
+
+function renderQ(q){
+  const a = state.a[q.key];
+  let body = "";
+  if(q.type==="single")
+    body = `<div class="opts ${q.stack?"stack":""}">${q.opts.map(o=>chip("radio",q.key,o,a===o)).join("")}</div>`;
+  else if(q.type==="multi")
+    body = `<div class="opts">${q.opts.map(o=>chip("checkbox",q.key,o,(a||[]).includes(o))).join("")}</div>`;
+  else if(q.type==="scale")
+    body = `<div class="scale">${[1,2,3,4,5].map(n=>chip("radio",q.key,n,a===n)).join("")}</div>
+            <div class="scale-ends"><span>1 · ${esc(q.lo)}</span><span>5 · ${esc(q.hi)}</span></div>`;
+  else if(q.type==="grid")
+    body = q.rows.map(([k,label])=>`<div class="grid-row" data-row="${k}"><div class="grid-label">${esc(label)}</div>
+      <div class="seg">${q.cols.map(c=>chip("radio",q.key+"."+k,c,(a||{})[k]===c)).join("")}</div></div>`).join("");
+  else if(q.type==="text")
+    body = `<input type="text" name="${q.key}" maxlength="80" placeholder="${esc(q.ph||"")}" value="${esc(a||"")}">`;
+  else if(q.type==="long")
+    body = `<textarea name="${q.key}" maxlength="2000" placeholder="${esc(q.ph||"")}">${esc(a||"")}</textarea>`;
+  if(q.other){
+    const show = q.type==="single" ? a===q.other : (a||[]).includes(q.other);
+    body += `<div class="other ${show?"show":""}"><input type="text" data-other="${q.key}" maxlength="120" placeholder="Please specify (optional)" value="${esc(state.other[q.key]||"")}"></div>`;
+  }
+  return `<div class="q" data-key="${q.key}">
+    <div class="q-title"><span class="q-num">${q.n}.</span>${esc(q.text)} ${q.req?'<span class="req">*</span>':""}</div>
+    ${q.hint?`<div class="hint">${esc(q.hint)}</div>`:'<div class="hint" style="margin:0 0 10px"></div>'}
+    ${body}<div class="errmsg">${q.type==="grid"?"Please answer every row.":"Please choose an answer."}</div></div>`;
+}
+
+/* ───── interactions ───── */
+function wire(sec){
+  sec.qs.forEach(q=>{
+    const root = $(`.q[data-key="${q.key}"]`);
+    root.querySelectorAll("input[type=radio],input[type=checkbox]").forEach(inp=>{
+      inp.onchange = () => {
+        if(q.type==="single"||q.type==="scale") state.a[q.key] = q.type==="scale" ? +inp.value : inp.value;
+        if(q.type==="grid"){ const k = inp.name.split(".")[1]; state.a[q.key] = {...(state.a[q.key]||{}), [k]:inp.value}; }
+        if(q.type==="multi"){
+          let v = new Set(state.a[q.key]||[]);
+          if(inp.checked){
+            if((q.exclusive||[]).includes(inp.value)) v = new Set([inp.value]);
+            else (q.exclusive||[]).forEach(x=>v.delete(x)), v.add(inp.value);
+          } else v.delete(inp.value);
+          state.a[q.key] = [...v];
+          root.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked = v.has(c.value));
+          if(q.max){ const full = v.size>=q.max;
+            root.querySelectorAll("input[type=checkbox]").forEach(c=>c.disabled = full && !c.checked); }
+        }
+        if(q.other){
+          const v = state.a[q.key]; const on = Array.isArray(v) ? v.includes(q.other) : v===q.other;
+          root.querySelector(".other").classList.toggle("show",on);
+          if(!on) delete state.other[q.key];
+        }
+        root.classList.remove("err"); root.querySelectorAll(".grid-row").forEach(r=>r.classList.remove("err"));
+        save();
+      };
+    });
+    if(q.type==="multi" && q.max && (state.a[q.key]||[]).length>=q.max)
+      root.querySelectorAll("input[type=checkbox]").forEach(c=>c.disabled = !c.checked);
+    root.querySelectorAll("input[type=text],textarea").forEach(t=>{
+      t.oninput = () => {
+        if(t.dataset.other) state.other[t.dataset.other] = t.value;
+        else state.a[q.key] = t.value;
+        save();
+      };
+    });
+  });
+}
+
+function validate(sec){
+  let first = null;
+  sec.qs.forEach(q=>{
+    if(!q.req) return;
+    const root = $(`.q[data-key="${q.key}"]`), v = state.a[q.key];
+    let ok = true;
+    if(q.type==="grid"){
+      ok = q.rows.every(([k])=>v && v[k]);
+      root.querySelectorAll(".grid-row").forEach(r=>r.classList.toggle("err",!(v&&v[r.dataset.row])));
+    } else ok = v!==undefined && v!=="" ;
+    root.classList.toggle("err",!ok);
+    if(!ok && !first) first = root;
+  });
+  if(first) first.scrollIntoView({behavior:"smooth",block:"center"});
+  return !first;
+}
+
+async function next(sec,last){
+  if(!validate(sec)) return;
+  if(!last){ state.step++; return render(); }
+  const btn = $("#next"), err = $("#submitErr");
+  btn.disabled = true; btn.textContent = "Submitting…"; err.style.display="none";
+  try{
+    await submit();
+    state.done = true; state.a = {}; state.other = {};
+    try{ localStorage.setItem(LS, JSON.stringify({done:true})); }catch(e){}
+    render();
+  }catch(e){
+    console.error(e);
+    err.textContent = "Couldn't submit right now. Please check your connection and try again.";
+    err.style.display = "block"; btn.disabled = false; btn.textContent = "Submit";
+  }
+}
+
+async function submit(){
+  const row = {};
+  SECTIONS.forEach(s=>s.qs.forEach(q=>{
+    let v = state.a[q.key];
+    if(v===undefined || v==="" || (Array.isArray(v)&&!v.length)) v = null;
+    if(typeof v==="string") v = v.trim() || null;
+    row[q.key] = v;
+  }));
+  // free-text for "Other" options, only if that option is still selected
+  const other = {};
+  SECTIONS.forEach(s=>s.qs.forEach(q=>{
+    const t = (state.other[q.key]||"").trim();
+    if(q.other && t) other[q.key] = t;
+  }));
+  row.other_text = Object.keys(other).length ? other : null;
+  if(DEMO){ console.log("DEMO MODE – would insert:", row); await new Promise(r=>setTimeout(r,500)); return; }
+  const { error } = await sb.from(TABLE).insert(row);   // anon role: insert-only (see schema.sql)
+  if(error) throw error;
+}
+
+function renderThanks(){
+  app.innerHTML = `<section class="card thanks fade">
+    <div class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>
+    <h2>Thank you!</h2>
+    <p>Thank you for sharing your experience. Your feedback will help us better understand people's everyday needs and preferences.</p>
+    ${DEMO?`<p style="margin-top:16px;font-size:13px">(Demo mode: nothing was stored.)</p>`:""}
+  </section>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+render();
+</script>
+</body>
+</html>
