@@ -1,0 +1,999 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Survey Insights Dashboard</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F5F0E8;
+      --card: #FFFFFF;
+      --ink: #1B2B2D;
+      --muted: #5E6F70;
+      --line: #E4DDD0;
+      --track: #EFE9DC;
+      --brand: #0E4F4C;
+      --brand-soft: #DCEBE8;
+      --accent: #F0A63A;
+      --danger: #B8402B;
+      --on-brand: #fff;
+      --radius: 16px;
+      --shadow: 0 1px 2px rgba(27, 43, 45, .05), 0 10px 28px -14px rgba(27, 43, 45, .2);
+    }
+
+    @media (prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #101A1B;
+        --card: #172526;
+        --ink: #EAF0EE;
+        --muted: #9FB2B1;
+        --line: #27393A;
+        --track: #22363A;
+        --brand: #4FB3AA;
+        --brand-soft: #1E3B3A;
+        --accent: #F0B25A;
+        --on-brand: #08201F;
+        --shadow: none;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #101A1B;
+      --card: #172526;
+      --ink: #EAF0EE;
+      --muted: #9FB2B1;
+      --line: #27393A;
+      --track: #22363A;
+      --brand: #4FB3AA;
+      --brand-soft: #1E3B3A;
+      --accent: #F0B25A;
+      --on-brand: #08201F;
+      --shadow: none;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 15px/1.5 Inter, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 600;
+      letter-spacing: -.01em;
+      margin: 0
+    }
+
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 18px 80px
+    }
+
+    header.top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 22px
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: var(--brand)
+    }
+
+    .dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: conic-gradient(from 200deg, var(--brand), var(--accent), var(--brand));
+      display: grid;
+      place-items: center
+    }
+
+    .dot::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bg)
+    }
+
+    .btn {
+      appearance: none;
+      border: 1.5px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 10px;
+      padding: 9px 14px;
+      font: 500 14px Inter, sans-serif;
+      cursor: pointer
+    }
+
+    .btn:hover {
+      border-color: var(--brand)
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: var(--on-brand)
+    }
+
+    /* upload */
+    .drop {
+      border: 2px dashed var(--line);
+      background: var(--card);
+      border-radius: 20px;
+      padding: 56px 24px;
+      text-align: center;
+      transition: .15s;
+      box-shadow: var(--shadow)
+    }
+
+    .drop.over {
+      border-color: var(--brand);
+      background: var(--brand-soft)
+    }
+
+    .drop h1 {
+      font-size: clamp(26px, 5vw, 38px);
+      margin-bottom: 10px
+    }
+
+    .drop p {
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 20px
+    }
+
+    .drop .row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap
+    }
+
+    .live {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px
+    }
+
+    .live h1 {
+      font-size: clamp(24px, 4.5vw, 34px);
+      margin-bottom: 6px
+    }
+
+    .live p {
+      color: var(--muted);
+      margin: 0 0 16px
+    }
+
+    .live form {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 10px;
+      align-items: center
+    }
+
+    .live input {
+      font: inherit;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      min-width: 0
+    }
+
+    .live input:focus {
+      outline: 0;
+      border-color: var(--brand)
+    }
+
+    .or {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 4px 0 12px
+    }
+
+    @media(max-width:640px) {
+      .live form {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .priv {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .err {
+      background: #FBE9E5;
+      color: #8A2A18;
+      border: 1px solid #F0C4BA;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-top: 16px;
+      font-size: 14px;
+      text-align: left
+    }
+
+    @media (prefers-color-scheme:dark) {
+      :root:not([data-theme="light"]) .err {
+        background: #3A1F1A;
+        color: #F4B7A8;
+        border-color: #5A2E25
+      }
+    }
+
+    /* toolbar */
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 18px
+    }
+
+    .toolbar label {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    select,
+    input[type=search] {
+      font: inherit;
+      color: var(--ink);
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px
+    }
+
+    .spacer {
+      flex: 1
+    }
+
+    /* KPIs */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 26px
+    }
+
+    .kpi {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow)
+    }
+
+    .kpi .v {
+      font-family: Fraunces, serif;
+      font-size: 34px;
+      font-weight: 600;
+      line-height: 1.1;
+      color: var(--ink)
+    }
+
+    .kpi .l {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    /* sections */
+    section.sec {
+      margin-bottom: 34px
+    }
+
+    section.sec>h2 {
+      font-size: 24px;
+      margin-bottom: 4px
+    }
+
+    section.sec>p {
+      color: var(--muted);
+      margin: 0 0 14px;
+      font-size: 14px
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr));
+      gap: 14px
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      min-width: 0
+    }
+
+    .card.wide {
+      grid-column: 1/-1
+    }
+
+    .card h3 {
+      font-size: 16px;
+      line-height: 1.35;
+      margin-bottom: 2px;
+      font-family: Inter, sans-serif;
+      font-weight: 600
+    }
+
+    .card h3 .n {
+      color: var(--accent);
+      font-family: Fraunces, serif;
+      margin-right: 6px
+    }
+
+    .card .sub {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 12px
+    }
+
+    /* bars */
+    .bar {
+      display: grid;
+      grid-template-columns: minmax(110px, 38%) 1fr 78px;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 0;
+      cursor: default
+    }
+
+    .bar .lab {
+      font-size: 13.5px;
+      line-height: 1.3
+    }
+
+    .bar .track {
+      height: 14px;
+      background: var(--track);
+      border-radius: 7px;
+      overflow: hidden
+    }
+
+    .bar .fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 0 7px 7px 0;
+      min-width: 2px
+    }
+
+    .bar .val {
+      font-size: 13px;
+      text-align: right;
+      font-variant-numeric: tabular-nums
+    }
+
+    .bar .val span {
+      color: var(--muted)
+    }
+
+    .bar:hover .lab {
+      color: var(--brand)
+    }
+
+    .bar.top .fill {
+      background: var(--accent)
+    }
+
+    /* scale columns */
+    .cols {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      align-items: end;
+      height: 200px;
+      margin-top: 6px
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 100%;
+      align-items: center;
+      gap: 6px
+    }
+
+    .col .stick {
+      width: 100%;
+      max-width: 64px;
+      background: var(--brand);
+      border-radius: 8px 8px 0 0;
+      min-height: 2px
+    }
+
+    .col .pc {
+      font-size: 13px;
+      font-variant-numeric: tabular-nums
+    }
+
+    .col-labels {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      text-align: center;
+      margin-top: 6px;
+      font-family: Fraunces, serif;
+      font-size: 18px
+    }
+
+    .ends {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    /* heatmap */
+    .heat {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 3px;
+      font-size: 13px
+    }
+
+    .heat th {
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 2px 4px
+    }
+
+    .heat td.rl {
+      text-align: left;
+      padding-right: 10px;
+      font-size: 13.5px;
+      width: 34%
+    }
+
+    .heat td.c {
+      text-align: center;
+      border-radius: 8px;
+      padding: 11px 2px;
+      font-variant-numeric: tabular-nums;
+      background: color-mix(in srgb, var(--brand) calc(var(--p)*1%), var(--track));
+      color: var(--ink)
+    }
+
+    .heat td.c.hi {
+      color: var(--on-brand)
+    }
+
+    /* text */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--ink);
+      border-radius: 99px;
+      padding: 3px 10px;
+      font-size: 12.5px;
+      cursor: pointer
+    }
+
+    .chip b {
+      color: var(--muted);
+      font-weight: 500;
+      margin-left: 4px
+    }
+
+    .chip.on {
+      background: var(--brand);
+      color: var(--on-brand);
+      border-color: var(--brand)
+    }
+
+    .chip.on b {
+      color: var(--on-brand)
+    }
+
+    .quotes {
+      max-height: 340px;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 4px
+    }
+
+    .quote {
+      border-left: 3px solid var(--accent);
+      padding: 6px 10px;
+      background: var(--bg);
+      border-radius: 0 8px 8px 0;
+      font-size: 14px
+    }
+
+    mark {
+      background: color-mix(in srgb, var(--accent) 45%, transparent);
+      color: inherit;
+      border-radius: 3px;
+      padding: 0 1px
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 10px 0
+    }
+
+    #tip {
+      position: fixed;
+      pointer-events: none;
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 12.5px;
+      padding: 6px 9px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity .08s;
+      z-index: 9;
+      max-width: 260px
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    @media(max-width:560px) {
+      .bar {
+        grid-template-columns: 1fr 70px
+      }
+
+      .bar .track {
+        grid-column: 1/-1;
+        order: 3
+      }
+
+      .bar .lab {
+        grid-column: 1
+      }
+    }
+
+    @media print {
+
+      .toolbar,
+      header.top .btn {
+        display: none
+      }
+
+      body {
+        background: #fff
+      }
+
+      .card,
+      .kpi {
+        box-shadow: none
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <div class="dot"></div> Survey Insights
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" id="refresh" hidden>Refresh</button>
+        <button class="btn" id="newFile" hidden>Change source</button>
+        <button class="btn" id="signout" hidden>Sign out</button>
+        <button class="btn" id="printBtn" hidden>Print / Save PDF</button>
+      </div>
+    </header>
+
+    <div id="upload">
+      <div class="live" id="livecard" hidden>
+        <h1>Live survey results</h1>
+        <p>Sign in with your admin account to read responses straight from Supabase.</p>
+        <form id="loginForm">
+          <input type="email" id="email" placeholder="Email" autocomplete="username" required>
+          <input type="password" id="pass" placeholder="Password" autocomplete="current-password" required>
+          <button class="btn primary" id="loginBtn" type="submit">Sign in</button>
+        </form>
+        <div class="err" id="loginErr" hidden></div>
+      </div>
+      <div class="or" id="orline" hidden>or</div>
+      <div class="drop" id="drop">
+        <h1 id="dropTitle">See how people are responding</h1>
+        <p>Export <b>survey_responses</b> from Supabase as CSV (Table Editor → Export → CSV), then drop the file here.
+        </p>
+        <div class="row">
+          <button class="btn primary" id="pick">Choose CSV file</button>
+          <button class="btn" id="sample">Try with sample data</button>
+        </div>
+        <input type="file" id="file" accept=".csv,text/csv" hidden>
+        <div class="priv">🔒 The file is read inside your browser only. It is never uploaded anywhere.</div>
+        <div class="err" id="err" hidden></div>
+      </div>
+    </div>
+
+    <div id="dash" hidden>
+      <div class="toolbar">
+        <label>Age group <select id="fAge"></select></label>
+        <label>Situation <select id="fSit"></select></label>
+        <span class="spacer"></span>
+        <span id="countNote" style="font-size:13px;color:var(--muted)"></span>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div id="sections"></div>
+    </div>
+  </div>
+  <div id="tip"></div>
+
+  <script src="/api/config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script>
+    /* ───────── survey definition (mirrors the survey) ───────── */
+    const FREQ = ["Never", "Rarely", "Sometimes", "Often", "Very often"];
+    const ORD = {
+      q1_age_group: ["Under 18", "18–21", "22–25", "26–30", "31–35", "36–45", "Above 45"],
+      q5_concentration_difficulty: ["Never", "Rarely", "Sometimes", "Often", "Almost always"],
+      q6_focus_duration: ["Less than 5 minutes", "5–10 minutes", "11–20 minutes", "21–30 minutes", "31–60 minutes", "More than 60 minutes", "It varies significantly depending on the task"],
+      q10_phone_time: ["Less than 2 hours", "2–4 hours", "4–6 hours", "6–8 hours", "More than 8 hours", "I'm not sure"],
+      q11_sleep: ["Less than 5 hours", "5–6 hours", "6–7 hours", "7–8 hours", "More than 8 hours"],
+      q12_caffeine: ["Never", "Less than once a week", "1–3 days a week", "4–6 days a week", "Daily", "Multiple times a day"],
+      q14_purchased: ["Yes, regularly", "Yes, occasionally", "I've considered it but never purchased one", "No, never"],
+      q18_price: ["Less than ₹10", "₹10–₹19", "₹20–₹29", "₹30–₹49", "₹50 or more", "It depends on the ingredients and effectiveness", "I wouldn't purchase one"]
+    };
+    const GRID_ROWS = [
+      ["phone_distraction", "Distracted by phone or notifications"],
+      ["losing_track", "Losing track of what I was doing"],
+      ["mental_fatigue", "Mentally tired without physical tiredness"],
+      ["hard_to_start", "Struggling to start an important task"],
+      ["daytime_sleepy", "Sleepy or less alert during the day"],
+      ["hard_to_resume", "Hard to resume after an interruption"]];
+    const SECS = [
+      {
+        t: "About the respondents", s: "Who answered.", qs: [
+          { n: 1, k: "q1_age_group", t: "Age group", kind: "single", ord: 1 },
+          { n: 2, k: "q2_gender", t: "Gender", kind: "single" },
+          { n: 3, k: "q3_situation", t: "Current situation", kind: "single" }]
+      },
+      {
+        t: "Focus & concentration", s: "How often and why focus slips.", qs: [
+          { n: 5, k: "q5_concentration_difficulty", t: "How often is it difficult to concentrate?", kind: "single", ord: 1 },
+          { n: 6, k: "q6_focus_duration", t: "How long can people focus before switching?", kind: "single", ord: 1 },
+          { n: 7, k: "q7_focus_frequency", t: "How often do people experience each of these?", kind: "grid", wide: 1 },
+          { n: 8, k: "q8_struggle_situations", t: "Where focus is hardest", kind: "multi" },
+          { n: 9, k: "q9_affecting_factors", t: "What affects concentration most (up to 3)", kind: "multi" }]
+      },
+      {
+        t: "Daily habits", s: "Phone, sleep and coping.", qs: [
+          { n: 10, k: "q10_phone_time", t: "Daily phone time", kind: "single", ord: 1 },
+          { n: 11, k: "q11_sleep", t: "Sleep per night", kind: "single", ord: 1 },
+          { n: 12, k: "q12_caffeine", t: "Caffeine to stay alert", kind: "single", ord: 1 },
+          { n: 13, k: "q13_coping", t: "What people do when mentally tired", kind: "multi" }]
+      },
+      {
+        t: "Focus-support products", s: "Interest, price and barriers.", qs: [
+          { n: 14, k: "q14_purchased", t: "Ever purchased a focus product?", kind: "single", ord: 1 },
+          { n: 15, k: "q15_formats", t: "Formats people would try", kind: "multi" },
+          { n: 16, k: "q16_priorities", t: "What matters most when choosing (up to 3)", kind: "multi" },
+          { n: 17, k: "q17_interest", t: "Interest in trying a focus-support product", kind: "scale" },
+          { n: 18, k: "q18_price", t: "Reasonable price for a single-use product", kind: "single", ord: 1 },
+          { n: 19, k: "q19_hesitations", t: "What makes people hesitate", kind: "multi" }]
+      },
+      {
+        t: "In their own words", s: "Open-ended answers. Click a keyword or search to filter.", qs: [
+          { n: 20, k: "q20_change_one_thing", t: "One thing they would change about focus or mental fatigue", kind: "text", wide: 1 },
+          { n: 21, k: "q21_trust_factors", t: "What would make them trust a new Indian brand", kind: "text", wide: 1 }]
+      }
+    ];
+
+    /* ───────── parsing ───────── */
+    function parseCSV(text) {
+      text = text.replace(/^\uFEFF/, "");
+      const rows = []; let row = [], f = "", q = false;
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (q) { if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c; }
+        else if (c === '"') q = true;
+        else if (c === ',') { row.push(f); f = ""; }
+        else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(f); f = ""; rows.push(row); row = []; }
+        else f += c;
+      }
+      if (f !== "" || row.length) { row.push(f); rows.push(row); }
+      return rows.filter(r => r.length > 1 || r[0] !== "");
+    }
+    function parseArr(s) {
+      if (s == null) return []; s = String(s).trim(); if (!s) return [];
+      if (s[0] === "[") { try { return JSON.parse(s).map(String); } catch (e) { } }
+      if (s[0] === "{" && s.endsWith("}")) {           // Postgres array literal
+        const inner = s.slice(1, -1), out = []; let cur = "", q = false;
+        for (let i = 0; i < inner.length; i++) {
+          const c = inner[i];
+          if (q) { if (c === "\\") cur += inner[++i]; else if (c === '"') q = false; else cur += c; }
+          else if (c === '"') q = true;
+          else if (c === ",") { out.push(cur); cur = ""; }
+          else cur += c;
+        }
+        out.push(cur);
+        return out.map(x => x.trim()).filter(x => x && x !== "NULL");
+      }
+      return s.split(";").map(x => x.trim()).filter(Boolean);
+    }
+    function parseObj(s) { try { const o = JSON.parse(s); return o && typeof o === "object" ? o : null; } catch (e) { return null; } }
+
+    function rowToRecord(o) {
+      const rec = { created_at: o.created_at || "" };
+      SECS.forEach(s => s.qs.forEach(q => {
+        const v = o[q.k];
+        if (q.kind === "multi") rec[q.k] = Array.isArray(v) ? v.map(String) : parseArr(v);
+        else if (q.kind === "grid") rec[q.k] = (v && typeof v === "object") ? v : (parseObj(v) || {});
+        else if (q.kind === "scale") rec[q.k] = v === "" || v == null || isNaN(+v) ? null : +v;
+        else rec[q.k] = (v == null ? "" : String(v)).trim();
+      }));
+      return rec;
+    }
+    function toRecords(text) {
+      const rows = parseCSV(text);
+      if (rows.length < 2) throw new Error("The file has no data rows.");
+      const head = rows[0].map(h => h.trim());
+      if (!head.includes("q1_age_group") || !head.includes("q5_concentration_difficulty"))
+        throw new Error("This doesn't look like an export of the survey_responses table (expected columns such as q1_age_group, q5_concentration_difficulty).");
+      return rows.slice(1).map(r => { const o = {}; head.forEach((h, i) => o[h] = r[i] === undefined ? "" : r[i]); return rowToRecord(o); });
+    }
+
+    /* ───────── helpers ───────── */
+    const $ = s => document.querySelector(s);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+    let ALL = [], SOURCE = "csv", textFilter = { q20_change_one_thing: { kw: "", s: "" }, q21_trust_factors: { kw: "", s: "" } };
+
+    function counts(rows, q) {
+      const m = new Map(); let n = 0;
+      rows.forEach(r => {
+        const v = r[q.k];
+        const arr = q.kind === "multi" ? v : (v ? [v] : []);
+        if (arr.length) n++;
+        arr.forEach(x => m.set(x, (m.get(x) || 0) + 1));
+      });
+      let list = [...m.entries()];
+      if (q.ord) {
+        const o = ORD[q.k];
+        list.sort((a, b) => { const ia = o.indexOf(a[0]), ib = o.indexOf(b[0]); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); });
+        // show unselected ordinal options too, so gaps are visible
+        o.forEach(x => { if (!m.has(x)) list.push([x, 0]); });
+        list.sort((a, b) => { const ia = o.indexOf(a[0]), ib = o.indexOf(b[0]); return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib); });
+      } else list.sort((a, b) => b[1] - a[1]);
+      return { list, n };
+    }
+
+    /* ───────── rendering ───────── */
+    function barsHTML(q, rows) {
+      const { list, n } = counts(rows, q);
+      if (!n) return `<div class="empty">No answers yet.</div>`;
+      const max = Math.max(...list.map(x => x[1]), 1), topV = Math.max(...list.map(x => x[1]));
+      return `<div class="sub">${n} responded${q.kind === "multi" ? " · each bar is % of respondents who picked it" : ""}</div>` +
+        list.map(([l, c]) => `<div class="bar ${c === topV && c > 0 ? "top" : ""}" data-tip="${esc(l)}: ${c} of ${n} (${pct(c, n)}%)">
+      <div class="lab">${esc(l)}</div>
+      <div class="track"><div class="fill" style="width:${c / max * 100}%"></div></div>
+      <div class="val">${pct(c, n)}% <span>(${c})</span></div></div>`).join("");
+    }
+    function scaleHTML(q, rows) {
+      const vals = rows.map(r => r[q.k]).filter(v => v >= 1 && v <= 5), n = vals.length;
+      if (!n) return `<div class="empty">No answers yet.</div>`;
+      const c = [1, 2, 3, 4, 5].map(i => vals.filter(v => v === i).length), max = Math.max(...c, 1);
+      const avg = (vals.reduce((a, b) => a + b, 0) / n).toFixed(2);
+      return `<div class="sub">${n} responded · average <b>${avg}</b> out of 5</div>
+  <div class="cols">${c.map((x, i) => `<div class="col" data-tip="Rated ${i + 1}: ${x} of ${n} (${pct(x, n)}%)">
+     <div class="pc">${pct(x, n)}%</div><div class="stick" style="height:${x / max * 78}%"></div></div>`).join("")}</div>
+  <div class="col-labels">${[1, 2, 3, 4, 5].map(i => `<span>${i}</span>`).join("")}</div>
+  <div class="ends"><span>Not interested at all</span><span>Extremely interested</span></div>`;
+    }
+    function gridHTML(q, rows) {
+      const answered = rows.filter(r => Object.keys(r[q.k] || {}).length).length;
+      if (!answered) return `<div class="empty">No answers yet.</div>`;
+      const body = GRID_ROWS.map(([k, label]) => {
+        const vals = rows.map(r => (r[q.k] || {})[k]).filter(Boolean), n = vals.length;
+        return `<tr><td class="rl">${esc(label)}</td>` + FREQ.map(f => {
+          const c = vals.filter(v => v === f).length, p = pct(c, n);
+          return `<td class="c ${p >= 45 ? "hi" : ""}" style="--p:${p}" data-tip="${esc(label)} — ${f}: ${c} of ${n} (${p}%)">${p}%</td>`;
+        }).join("") + `</tr>`;
+      }).join("");
+      return `<div class="sub">${answered} responded · darker = more people · each row sums to 100%</div>
+  <table class="heat"><thead><tr><th></th>${FREQ.map(f => `<th>${f}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table>`;
+    }
+    const STOP = new Set("the a an and or of to in on for with is are was be it its i me my we you your that this at as by from not no have has had can do so but if more less very just than too much many can't dont don't im i'm would could should about when what which who how also get got into out up all any one".split(" "));
+    function textHTML(q, rows) {
+      const answers = rows.map(r => (r[q.k] || "").trim()).filter(Boolean);
+      if (!answers.length) return `<div class="empty">No written answers yet.</div>`;
+      const f = textFilter[q.k], freq = new Map();
+      answers.forEach(a => new Set(a.toLowerCase().match(/[a-z\u0900-\u097F']{3,}/g) || []).forEach(w => { if (!STOP.has(w)) freq.set(w, (freq.get(w) || 0) + 1); }));
+      const top = [...freq.entries()].filter(e => e[1] > 1).sort((a, b) => b[1] - a[1]).slice(0, 14);
+      const term = (f.s || f.kw || "").toLowerCase();
+      const shown = term ? answers.filter(a => a.toLowerCase().includes(term)) : answers;
+      const hl = t => term ? esc(t).replace(new RegExp(esc(term).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), m => `<mark>${m}</mark>`) : esc(t);
+      return `<div class="sub">${answers.length} written answers${term ? ` · ${shown.length} match “${esc(term)}”` : ""}</div>
+  <div class="chips">${top.map(([w, c]) => `<button class="chip ${f.kw === w ? "on" : ""}" data-kw="${esc(w)}" data-k="${q.k}">${esc(w)}<b>${c}</b></button>`).join("") || '<span class="empty">Keywords appear once a few answers repeat words.</span>'}</div>
+  <input type="search" placeholder="Search answers…" value="${esc(f.s)}" data-search="${q.k}" style="width:100%;margin-bottom:10px">
+  <div class="quotes">${shown.slice(0, 200).map(a => `<div class="quote">${hl(a)}</div>`).join("") || '<div class="empty">No matches.</div>'}</div>`;
+    }
+
+    function filtered() {
+      const a = $("#fAge").value, s = $("#fSit").value;
+      return ALL.filter(r => (!a || r.q1_age_group === a) && (!s || r.q3_situation === s));
+    }
+    function render() {
+      const rows = filtered();
+      $("#countNote").textContent = (SOURCE === "live" ? "Live · " : "CSV · ") + (rows.length === ALL.length ? `${ALL.length} responses` : `Showing ${rows.length} of ${ALL.length} responses`);
+      const iv = rows.map(r => r.q17_interest).filter(v => v), purch = rows.filter(r => r.q14_purchased).length;
+      const often = rows.filter(r => ["Often", "Almost always"].includes(r.q5_concentration_difficulty)).length;
+      const conc = rows.filter(r => r.q5_concentration_difficulty).length;
+      const buy = rows.filter(r => /^Yes/.test(r.q14_purchased)).length;
+      const interested = iv.filter(v => v >= 4).length;
+      $("#kpis").innerHTML = [
+        [rows.length, "Responses"],
+        [iv.length ? (iv.reduce((a, b) => a + b, 0) / iv.length).toFixed(1) + " / 5" : "–", "Average interest in a focus product"],
+        [pct(interested, iv.length) + "%", "Rated interest 4 or 5"],
+        [pct(often, conc) + "%", "Often struggle to concentrate"],
+        [pct(buy, purch) + "%", "Have bought a focus product before"]
+      ].map(([v, l]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+      $("#sections").innerHTML = SECS.map(s => `<section class="sec"><h2>${s.t}</h2><p>${s.s}</p><div class="grid">` +
+        s.qs.map(q => `<div class="card ${q.wide ? "wide" : ""}"><h3><span class="n">${q.n}.</span>${esc(q.t)}</h3>${q.kind === "scale" ? scaleHTML(q, rows) : q.kind === "grid" ? gridHTML(q, rows) : q.kind === "text" ? textHTML(q, rows) : barsHTML(q, rows)}</div>`).join("") +
+        `</div></section>`).join("");
+    }
+
+    function load(records, source) {
+      SOURCE = source || "csv"; ALL = records;
+      const opts = (key, order) => {
+        const vals = [...new Set(ALL.map(r => r[key]).filter(Boolean))];
+        if (order) vals.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+        return `<option value="">All</option>` + vals.map(v => `<option>${esc(v)}</option>`).join("");
+      };
+      $("#fAge").innerHTML = opts("q1_age_group", ORD.q1_age_group);
+      $("#fSit").innerHTML = opts("q3_situation");
+      $("#upload").hidden = true; $("#dash").hidden = false;
+      $("#newFile").hidden = false; $("#printBtn").hidden = false;
+      $("#refresh").hidden = SOURCE !== "live"; $("#signout").hidden = SOURCE !== "live";
+      Object.values(textFilter).forEach(f => { f.kw = ""; f.s = ""; });
+      render();
+    }
+
+    /* ───────── events ───────── */
+    async function handleFile(file) {
+      const err = $("#err"); err.hidden = true;
+      try { load(toRecords(await file.text())); }
+      catch (e) { err.textContent = e.message; err.hidden = false; }
+    }
+    $("#pick").onclick = () => $("#file").click();
+    $("#file").onchange = e => e.target.files[0] && handleFile(e.target.files[0]);
+    const drop = $("#drop");
+    ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+    ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+    drop.addEventListener("drop", e => e.dataTransfer.files[0] && handleFile(e.dataTransfer.files[0]));
+    function showUpload() { $("#dash").hidden = true; $("#upload").hidden = false;["#newFile", "#printBtn", "#refresh", "#signout"].forEach(i => $(i).hidden = true); $("#file").value = ""; }
+    $("#newFile").onclick = showUpload;
+    $("#printBtn").onclick = () => window.print();
+    $("#fAge").onchange = $("#fSit").onchange = render;
+    document.addEventListener("click", e => {
+      const c = e.target.closest(".chip"); if (!c) return;
+      const f = textFilter[c.dataset.k]; f.kw = f.kw === c.dataset.kw ? "" : c.dataset.kw; f.s = ""; render();
+    });
+    document.addEventListener("input", e => {
+      const k = e.target.dataset && e.target.dataset.search; if (!k) return;
+      textFilter[k].s = e.target.value; textFilter[k].kw = ""; const pos = e.target.selectionStart; render();
+      const el = document.querySelector(`[data-search="${k}"]`); el.focus(); el.setSelectionRange(pos, pos);
+    });
+    const tip = $("#tip");
+    document.addEventListener("mousemove", e => {
+      const t = e.target.closest("[data-tip]");
+      if (!t) { tip.style.opacity = 0; return; }
+      tip.textContent = t.dataset.tip; tip.style.opacity = 1;
+      tip.style.left = Math.min(e.clientX + 14, innerWidth - 270) + "px"; tip.style.top = (e.clientY + 16) + "px";
+    });
+
+    /* ───────── live data via Supabase Auth ───────── */
+    const ENV = window.ENV || {};
+    const sb = (window.supabase && ENV.SUPABASE_URL && ENV.SUPABASE_ANON_KEY) ? window.supabase.createClient(ENV.SUPABASE_URL, ENV.SUPABASE_ANON_KEY) : null;
+    async function fetchLive() {
+      const out = [], size = 1000;
+      for (let from = 0; ; from += size) {
+        const { data, error } = await sb.from("survey_responses").select("*").order("created_at", { ascending: true }).range(from, from + size - 1);
+        if (error) throw error;
+        out.push(...data); if (data.length < size) break;
+      }
+      return out;
+    }
+    function loginError(msg) { const e = $("#loginErr"); e.textContent = msg; e.hidden = !msg; }
+    async function loadLive() {
+      loginError("");
+      try {
+        const rows = await fetchLive();
+        if (!rows.length) { loginError("Signed in, but no rows came back. If responses exist, run supabase/admin_read.sql in the Supabase SQL Editor so signed-in users can read the table."); return false; }
+        load(rows.map(rowToRecord), "live"); return true;
+      } catch (e) { loginError("Couldn't read responses: " + (e.message || e)); return false; }
+    }
+    if (sb) {
+      $("#livecard").hidden = false; $("#orline").hidden = false; $("#dropTitle").textContent = "Upload a CSV export";
+      $("#loginForm").onsubmit = async e => {
+        e.preventDefault(); loginError(""); const b = $("#loginBtn"); b.disabled = true; b.textContent = "Signing in…";
+        const { error } = await sb.auth.signInWithPassword({ email: $("#email").value.trim(), password: $("#pass").value });
+        b.disabled = false; b.textContent = "Sign in";
+        if (error) return loginError(error.message);
+        $("#pass").value = ""; await loadLive();
+      };
+      $("#refresh").onclick = async () => { const b = $("#refresh"); b.disabled = true; b.textContent = "Refreshing…"; await loadLive(); b.disabled = false; b.textContent = "Refresh"; };
+      $("#signout").onclick = async () => { await sb.auth.signOut(); showUpload(); };
+      sb.auth.getSession().then(({ data }) => { if (data && data.session) loadLive(); });
+    }
+
+    /* ───────── sample data (exports in Postgres format, so it also tests the parser) ───────── */
+    $("#sample").onclick = () => {
+      const pick = a => a[Math.floor(Math.random() * a.length)];
+      const some = (a, max) => { const n = 1 + Math.floor(Math.random() * max); return [...a].sort(() => Math.random() - .5).slice(0, n); };
+      const arr = a => "{" + a.map(x => `"${x.replace(/"/g, '\\"')}"`).join(",") + "}";
+      const opts = {
+        q8: ["Studying or preparing for exams", "Working on a laptop or at a desk", "Reading books or long articles", "Attending classes or meetings", "During afternoon or evening hours", "Other"],
+        q9: ["Poor sleep", "Excessive social media use", "Frequent phone notifications", "Stress or anxiety", "Lack of motivation", "Boredom", "Heavy workload"],
+        q13: ["Drink coffee or tea", "Take a short break", "Scroll social media", "Eat a snack", "Exercise or walk", "Take a nap", "Chew gum"],
+        q15: ["Functional chewing gum", "Tablets that dissolve in water", "Ready-to-drink beverages", "Powders mixed with water", "None of these"],
+        q16: ["Evidence that it works", "Safety and ingredient transparency", "Fast onset of effect", "Convenient to carry and use", "Affordable price", "Trusted brand", "Good taste"],
+        q19: ["Concerns about safety", "Doubts about whether it works", "Price", "Unfamiliar ingredients", "Unwanted side effects", "Taste"]
+      };
+      const texts = ["I wish I could stop checking my phone every few minutes", "Better sleep so I am not tired in the afternoon", "I get mentally tired after two hours of study", "Clear ingredient list and lab testing", "Doctor or expert recommendation would build trust", "Affordable price and no side effects", "Stop procrastinating and start tasks quickly", "Transparent ingredients, reviews from real students", ""];
+      const H = ["id", "created_at", "q1_age_group", "q2_gender", "q3_situation", "q4_city", "q5_concentration_difficulty", "q6_focus_duration", "q7_focus_frequency", "q8_struggle_situations", "q9_affecting_factors", "q10_phone_time", "q11_sleep", "q12_caffeine", "q13_coping", "q14_purchased", "q15_formats", "q16_priorities", "q17_interest", "q18_price", "q19_hesitations", "q20_change_one_thing", "q21_trust_factors", "other_text"];
+      const csvf = v => { v = String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+      const lines = [H.join(",")];
+      for (let i = 0; i < 180; i++) {
+        const grid = {}; GRID_ROWS.forEach(([k]) => grid[k] = pick([...FREQ, "Sometimes", "Often", "Often"]));
+        const row = [i, "2026-10-2" + (i % 9), pick(ORD.q1_age_group.slice(1, 6)), pick(["Male", "Female", "Female", "Male", "Non-binary"]), pick(["School/college student", "School/college student", "Working professional", "Preparing for competitive exams", "Entrepreneur/freelancer"]), pick(["Pune", "Bengaluru", "Delhi", ""]),
+          pick(ORD.q5_concentration_difficulty), pick(ORD.q6_focus_duration), JSON.stringify(grid), arr(some(opts.q8, 3)), arr(some(opts.q9, 3)), pick(ORD.q10_phone_time), pick(ORD.q11_sleep), pick(ORD.q12_caffeine), arr(some(opts.q13, 3)), pick(ORD.q14_purchased), arr(some(opts.q15, 2)), arr(some(opts.q16, 3)), 1 + Math.floor(Math.random() * 5), pick(ORD.q18_price), arr(some(opts.q19, 3)), pick(texts), pick(texts), ""];
+        lines.push(row.map(csvf).join(","));
+      }
+      try { load(toRecords(lines.join("\n"))); } catch (e) { $("#err").textContent = e.message; $("#err").hidden = false; }
+    };
+  </script>
+</body>
+
+</html>
